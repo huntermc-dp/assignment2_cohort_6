@@ -1,0 +1,47 @@
+CREATE TABLE CompaniesTable (
+    comany_id UUID PRIMARY KEY,
+    comany_name VARCHAR UNIQUE NOT NULL
+);
+
+CREATE TABLE CategoriesTable (
+    category_id UUID PRIMARY KEY,
+    category_name VARCHAR UNIQUE NOT NULL
+);
+
+CREATE TABLE ProductsTable (
+    product_id UUID PRIMARY KEY,
+    comany_id UUID REFERENCES CompaniesTable(comany_id),
+    comany_name VARCHAR UNIQUE NOT NULL,
+    price INTEGER,
+    description VARCHAR,
+    active BOOLEAN DEFAULT TRUE
+);
+
+CREATE TABLE ProductsCategoriesTable (
+    product_id UUID REFERENCES ProductsTable(product_id),
+    category_id UUID REFERENCES CategoriesTable(category_id)
+);
+
+SELECT * FROM CompaniesTable;
+SELECT * FROM CategoriesTable;
+SELECT * FROM ProductsTable;
+SELECT * FROM ProductsTable WHERE active IS TRUE;
+SELECT * FROM ProductsTable WHERE comany_id = 'Company ID';
+
+SELECT * FROM CategoriesTable
+LEFT JOIN ProductsCategoriesTable ON CategoriesTable.category_id = ProductsCategoriesTable.category_id
+LEFT JOIN ProductsTable ON ProductsCategoriesTable.product_id = ProductsTable.product_id
+WHERE CategoriesTable.category_id = 'Category ID';
+
+SELECT * FROM ProductsTable
+LEFT JOIN ProductsCategoriesTable ON ProductsTable.product_id = ProductsCategoriesTable.product_id
+LEFT JOIN CategoriesTable ON ProductsCategoriesTable.category_id = CategoriesTable.category_id
+WHERE ProductsTable.product_id = 'Product ID';
+
+UPDATE ProductsTable SET price = 150, description = 'New Description' WHERE product_id = 'Product ID';
+UPDATE CompaniesTable SET company_name = 'New comany_name' WHERE product_id = 'Product ID
+UPDATE ProductsCategoriesTable SET category_id = 'New Category ID' WHERE product_id = 'Product ID';
+UPDATE CategoriesTable SET category_name = 'New Category NAME' WHERE category_id = 'Category ID';
+
+
+DELETE FROM ProductsTable WHERE product_id = 'Product ID';
